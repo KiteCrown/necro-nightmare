@@ -1,0 +1,54 @@
+{
+    "name": "Necro Nightmare",
+    "description": "",
+    "dependencies": {
+        "device": "*",
+        "arcade-character-animations": "github:microsoft/arcade-character-animations#v0.0.2",
+        "tilemaps": "github:microsoft/pxt-tilemaps#v1.12.0",
+        "arcade-premium-life": "github:jwunderl/arcade-premium-life#v0.2.1",
+        "darts": "*",
+        "grafxkid-tiles": "github:riknoll/grafxkid-tiles#v2.0.1",
+        "Timers": "github:microsoft/arcade-timers#v1.1.0",
+        "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.2.1",
+        "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
+        "arcade-fancy-text": "github:riknoll/arcade-fancy-text#v0.1.1",
+        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.2"
+    },
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "assets.json",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "targetVersions": {
+        "target": "1.12.53",
+        "targetId": "arcade"
+    },
+    "supportedTargets": [
+        "arcade"
+    ],
+    "preferredEditor": "blocksprj",
+    "palette": [
+        "#000000",
+        "#FFFFFF",
+        "#FF2121",
+        "#AA0909",
+        "#9E154C",
+        "#840101",
+        "#156266",
+        "#44503F",
+        "#16243C",
+        "#0D2A6E",
+        "#370B51",
+        "#453042",
+        "#3B2249",
+        "#623727",
+        "#4E0E0E",
+        "#000000"
+    ]
+}
