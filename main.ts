@@ -5,15 +5,133 @@ namespace SpriteKind {
     export const entrance = SpriteKind.create()
     export const healther = SpriteKind.create()
     export const blacksmith = SpriteKind.create()
+    export const round = SpriteKind.create()
+    export const ninja = SpriteKind.create()
+    export const nightmareBoss = SpriteKind.create()
 }
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.ninja, function (sprite, otherSprite) {
+    for (let index = 0; index < 4; index++) {
+        coin = sprites.create(img`
+            . . b b b b . . 
+            . b 2 2 2 2 b . 
+            b 2 2 3 3 2 2 b 
+            b 2 3 2 2 3 2 b 
+            c 2 3 2 2 3 2 c 
+            c 2 2 3 3 2 2 c 
+            . f 2 2 2 2 f . 
+            . . f f f f . . 
+            `, SpriteKind.Food)
+        animation.runImageAnimation(
+            coin,
+            [img`
+            . . b b b b . . 
+            . b 5 5 5 5 b . 
+            b 5 d 3 3 d 5 b 
+            b 5 3 5 5 1 5 b 
+            c 5 3 5 5 1 d c 
+            c d d 1 1 d d c 
+            . f d d d d f . 
+            . . f f f f . . 
+            `, img`
+            . . b b b . . . 
+            . b 5 5 5 b . . 
+            b 5 d 3 d 5 b . 
+            b 5 3 5 1 5 b . 
+            c 5 3 5 1 d c . 
+            c 5 d 1 d d c . 
+            . f d d d f . . 
+            . . f f f . . . 
+            `, img`
+            . . . b b . . . 
+            . . b 5 5 b . . 
+            . b 5 d 1 5 b . 
+            . b 5 3 1 5 b . 
+            . c 5 3 1 d c . 
+            . c 5 1 d d c . 
+            . . f d d f . . 
+            . . . f f . . . 
+            `, img`
+            . . . b b . . . 
+            . . b 5 5 b . . 
+            . . b 1 1 b . . 
+            . . b 5 5 b . . 
+            . . b d d b . . 
+            . . c d d c . . 
+            . . c 3 3 c . . 
+            . . . f f . . . 
+            `, img`
+            . . . b b . . . 
+            . . b 5 5 b . . 
+            . b 5 1 d 5 b . 
+            . b 5 1 3 5 b . 
+            . c d 1 3 5 c . 
+            . c d d 1 5 c . 
+            . . f d d f . . 
+            . . . f f . . . 
+            `, img`
+            . . . b b b . . 
+            . . b 5 5 5 b . 
+            . b 5 d 3 d 5 b 
+            . b 5 1 5 3 5 b 
+            . c d 1 5 3 5 c 
+            . c d d 1 d 5 c 
+            . . f d d d f . 
+            . . . f f f . . 
+            `],
+            100,
+            true
+        )
+        coin.setPosition(otherSprite.x, otherSprite.y)
+    }
+    sprites.destroy(otherSprite, effects.halo, 2000)
+    music.play(music.melodyPlayable(music.smallCrash), music.PlaybackMode.UntilDone)
+    music.play(music.melodyPlayable(music.zapped), music.PlaybackMode.UntilDone)
+})
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
         mySprite.vy = -240
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile6`, function (sprite, location) {
-    tiles.loadMap(tiles.createSmallMap(tilemap`level26`))
-    tiles.setCurrentTilemap(tilemap`level22`)
+    tiles.loadMap(tiles.createSmallMap(tilemap`level4`))
+    attack = 1
+    tiles.placeOnRandomTile(mySprite, assets.tile`myTile11`)
+    sprites.destroy(zombieHealther)
+    sprites.destroy(blacksmith)
+    for (let value of tiles.getTilesByType(assets.tile`myTile3`)) {
+        blob = sprites.create(img`
+            . . . . . . . . 
+            . . . . . . . . 
+            . . . . . . . . 
+            . . . . . . . . 
+            . . f f f f . . 
+            . f 7 7 7 7 f . 
+            f 7 f 7 7 f 7 f 
+            f 7 7 7 7 7 7 f 
+            `, SpriteKind.Enemy)
+        tiles.placeOnTile(blob, value)
+        tiles.setTileAt(value, assets.tile`transparency8`)
+        blob.ay = 500
+        blob.vx = randint(-30, 30)
+        blob.setBounceOnWall(true)
+        blob.vy = 30
+    }
+    for (let value of tiles.getTilesByType(assets.tile`myTile12`)) {
+        ninja = sprites.create(img`
+            . . 3 . . . . . . 
+            . . . 3 3 3 3 3 . 
+            . . 3 . f f f f . 
+            . . . . f f f f . 
+            . . . . . . f . . 
+            . . . . . f f f . 
+            . . . . . . f . . 
+            . . . . . f . f . 
+            . . . . . f . f . 
+            `, SpriteKind.ninja)
+        tiles.placeOnTile(ninja, value)
+        tiles.setTileAt(value, assets.tile`transparency8`)
+        ninja.ay = 500
+    }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.crowBoss, function (sprite, otherSprite) {
     info.changeLifeBy(-1)
@@ -36,8 +154,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.crowBoss, function (sprite, 
         . . f f f f . . 
         `, SpriteKind.Food)
     animation.runImageAnimation(
-    coin,
-    [img`
+        coin,
+        [img`
         . . b b b b . . 
         . b 5 5 5 5 b . 
         b 5 d 3 3 d 5 b 
@@ -46,7 +164,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.crowBoss, function (sprite, 
         c d d 1 1 d d c 
         . f d d d d f . 
         . . f f f f . . 
-        `,img`
+        `, img`
         . . b b b . . . 
         . b 5 5 5 b . . 
         b 5 d 3 d 5 b . 
@@ -55,7 +173,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.crowBoss, function (sprite, 
         c 5 d 1 d d c . 
         . f d d d f . . 
         . . f f f . . . 
-        `,img`
+        `, img`
         . . . b b . . . 
         . . b 5 5 b . . 
         . b 5 d 1 5 b . 
@@ -64,7 +182,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.crowBoss, function (sprite, 
         . c 5 1 d d c . 
         . . f d d f . . 
         . . . f f . . . 
-        `,img`
+        `, img`
         . . . b b . . . 
         . . b 5 5 b . . 
         . . b 1 1 b . . 
@@ -73,7 +191,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.crowBoss, function (sprite, 
         . . c d d c . . 
         . . c 3 3 c . . 
         . . . f f . . . 
-        `,img`
+        `, img`
         . . . b b . . . 
         . . b 5 5 b . . 
         . b 5 1 d 5 b . 
@@ -82,7 +200,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.crowBoss, function (sprite, 
         . c d d 1 5 c . 
         . . f d d f . . 
         . . . f f . . . 
-        `,img`
+        `, img`
         . . . b b b . . 
         . . b 5 5 5 b . 
         . b 5 d 3 d 5 b 
@@ -92,16 +210,17 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.crowBoss, function (sprite, 
         . . f d d d f . 
         . . . f f f . . 
         `],
-    100,
-    true
+        100,
+        true
     )
     coin.setPosition(otherSprite.x, otherSprite.y)
     music.play(music.melodyPlayable(music.smallCrash), music.PlaybackMode.UntilDone)
     music.play(music.melodyPlayable(music.zapped), music.PlaybackMode.UntilDone)
     statusbar.value += -100
 })
+
 sprites.onOverlap(SpriteKind.Player, SpriteKind.entrance, function (sprite, otherSprite) {
-    tiles.loadMap(tiles.createSmallMap(tilemap`level20`))
+    tiles.loadMap(tiles.createSmallMap(tilemap`level3`))
     sprites.destroy(entranceLv2)
     for (let value of tiles.getTilesByType(assets.tile`myTile4`)) {
         zombieHealther = sprites.create(img`
@@ -255,7 +374,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, lo
         cccccccccccccccccccc9ccccccccccccccccccccccccccccccccccc9ccccccccccccccccccccccccccccccccccccc9ccccccccccccccccccccccccccccccccccc9ccccccccccccccccccccccccccccc
         cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
         `)
-    tiles.loadMap(tiles.createSmallMap(tilemap`level8`))
+    tiles.loadMap(tiles.createSmallMap(tilemap`level5`))
     tiles.placeOnRandomTile(mySprite, assets.tile`transparency8`)
     crowReaper = sprites.create(img`
         ..................
@@ -309,16 +428,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, lo
             statusbar.attachToSprite(crowReaper)
             statusbar.setColor(12, 15)
             statusbar.setBarBorder(1, 6)
-            fancyText.setAnimationSound(myTextSprite, music.createSoundEffect(
-            WaveShape.Sawtooth,
-            0,
-            3781,
-            255,
-            0,
-            2000,
-            SoundExpressionEffect.None,
-            InterpolationCurve.Linear
-            ))
+            fancyText.setAnimationSound(myTextSprite, music.createSoundEffect(WaveShape.Sawtooth, 0, 3781, 255, 0, 2000, SoundExpressionEffect.None, InterpolationCurve.Linear))
             fancyText.setFont(myTextSprite, fancyText.gothic_large)
             fancyText.animateForTime(myTextSprite, 500, fancyText.AnimationPlayMode.UntilDone)
             controller.moveSprite(mySprite, 100, 0)
@@ -328,6 +438,16 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, lo
                 boss1_fight_start = 1
             })
         })
+    })
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.ninja, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+    scene.cameraShake(4, 500)
+    mySprite.setFlag(SpriteFlag.GhostThroughSprites, true)
+    mySprite.startEffect(effects.fire, 3000)
+    music.play(music.createSoundEffect(WaveShape.Noise, 1766, 1, 255, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Curve), music.PlaybackMode.UntilDone)
+    timer.after(3000, function () {
+        mySprite.setFlag(SpriteFlag.GhostThroughSprites, false)
     })
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -352,8 +472,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . . . . . . . 
                 `, mySprite, 50, 0)
             animation.runImageAnimation(
-            projectile,
-            [img`
+                projectile,
+                [img`
                 . . . . . . 1 1 1 1 1 . . . . . 
                 . . . . . . . b b 1 1 1 1 1 . . 
                 . . . . . . . . . b b 1 1 1 1 1 
@@ -361,7 +481,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . b b b 1 1 1 
                 . . . . . . . . . b 1 1 1 1 1 . 
                 . . . . . . . b b 1 1 1 . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . 1 1 1 . . 
                 . . . . . . . . . b b 1 1 1 1 1 
@@ -369,7 +489,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . b b b 1 1 1 
                 . . . . . . . . . b 1 1 1 1 1 . 
                 . . . . . . . b b 1 1 1 . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . 1 1 
@@ -377,7 +497,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . b b b 1 1 1 
                 . . . . . . . . . b 1 1 1 1 1 . 
                 . . . . . . . b b 1 1 1 . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -385,7 +505,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . b b b 1 1 1 
                 . . . . . . . . . b 1 1 1 1 1 . 
                 . . . . . . . b b 1 1 1 . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -393,7 +513,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . b b 1 1 1 . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -402,8 +522,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            50,
-            false
+                50,
+                false
             )
         } else {
             projectile = sprites.createProjectileFromSprite(img`
@@ -425,8 +545,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . . . . . . . 
                 `, mySprite, -50, 0)
             animation.runImageAnimation(
-            projectile,
-            [img`
+                projectile,
+                [img`
                 . . . . . 1 1 1 1 1 . . . . . . 
                 . . 1 1 1 1 1 b b . . . . . . . 
                 1 1 1 1 1 b b . . . . . . . . . 
@@ -434,7 +554,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 1 1 1 b b b . . . . . . . . . . 
                 . 1 1 1 1 1 b . . . . . . . . . 
                 . . . . 1 1 1 b b . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . 1 1 1 . . . . . . . . . . . 
                 1 1 1 1 1 b b . . . . . . . . . 
@@ -442,7 +562,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 1 1 1 b b b . . . . . . . . . . 
                 . 1 1 1 1 1 b . . . . . . . . . 
                 . . . . 1 1 1 b b . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 1 1 . . . . . . . . . . . . . . 
@@ -450,7 +570,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 1 1 1 b b b . . . . . . . . . . 
                 . 1 1 1 1 1 b . . . . . . . . . 
                 . . . . 1 1 1 b b . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -458,7 +578,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 1 1 1 b b b . . . . . . . . . . 
                 . 1 1 1 1 1 b . . . . . . . . . 
                 . . . . 1 1 1 b b . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -466,7 +586,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . 1 1 1 b b . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -475,8 +595,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            50,
-            false
+                50,
+                false
             )
         }
     }
@@ -504,8 +624,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.crowProjectlie, function (sprite
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     face = 0
     animation.runImageAnimation(
-    mySprite,
-    [img`
+        mySprite,
+        [img`
         . . . . . . . . 
         . . 7 7 . . 2 . 
         . . 7 7 7 7 . . 
@@ -514,7 +634,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 1 b 1 b . . 
         . . 7 7 7 7 . . 
         . . e . . e . . 
-        `,img`
+        `, img`
         . . . . . . . . 
         . . 7 7 7 7 2 . 
         . . 7 7 7 7 7 . 
@@ -523,7 +643,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . e . . e . . 
         . . e . . . . . 
-        `,img`
+        `, img`
         . . 7 7 . . 2 . 
         . . 7 7 7 7 . . 
         . 7 7 7 7 7 7 . 
@@ -532,7 +652,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . . e e . . . 
         . . . e . . . . 
-        `,img`
+        `, img`
         . . 7 7 . . 2 . 
         . . 7 7 7 7 . . 
         . 7 7 7 7 7 7 . 
@@ -541,7 +661,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . . e e . . . 
         . . . . e . . . 
-        `,img`
+        `, img`
         . . 7 7 . . 2 . 
         . . 7 7 7 7 . . 
         . 7 7 7 7 7 7 . 
@@ -550,7 +670,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . e . . e . . 
         . . . . . e . . 
-        `,img`
+        `, img`
         . . . . . . . . 
         . . 7 7 . 2 . . 
         . 7 7 7 7 7 . . 
@@ -560,8 +680,8 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . e . . e . . 
         `],
-    50,
-    true
+        50,
+        true
     )
 })
 controller.right.onEvent(ControllerButtonEvent.Released, function () {
@@ -590,6 +710,81 @@ controller.left.onEvent(ControllerButtonEvent.Released, function () {
         . . e . . e . . 
         `)
 })
+scene.onOverlapTile(SpriteKind.Player, sprites.builtin.forestTiles10, function (sprite, location) {
+    tiles.loadMap(tiles.createSmallMap(tilemap`level2`))
+    necroNightmare = sprites.create(img`
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        ..................
+        `, SpriteKind.nightmareBoss)
+    necroNightmare.setPosition(148, 3)
+    necroNightmare.ay = 500
+    controller.moveSprite(necroNightmare, 0, 0)
+    timer.after(590, function () {
+        necroNightmare.setImage(img`
+            ..................
+            ..................
+            ..................
+            ..................
+            .ffff.............
+            fff1ff............
+            ..ffffffff.....f..
+            ...ffffffffffff...
+            ...ffffffffffff...
+            ....ffffffffff....
+            .....ffffffff.....
+            ......fffffff.....
+            .......fffff......
+            ........2.2.......
+            ........2.2.......
+            ..................
+            ..................
+            ..................
+            `)
+        necroNightmare.vx = 0
+        timer.after(500, function () {
+            myTextSprite_2 = fancyText.create("reaper crow")
+            myTextSprite_2.setPosition(74, 19)
+            necroHealth = statusbars.create(40, 4, StatusBarKind.EnemyHealth)
+            necroHealth.attachToSprite(necroNightmare)
+            necroHealth.setColor(3, 15)
+            necroHealth.setBarBorder(1, 6)
+            fancyText.setAnimationSound(myTextSprite_2, music.createSoundEffect(
+                WaveShape.Sawtooth,
+                0,
+                3781,
+                255,
+                0,
+                2000,
+                SoundExpressionEffect.None,
+                InterpolationCurve.Linear
+            ))
+            fancyText.setFont(myTextSprite_2, fancyText.gothic_large)
+            fancyText.animateForTime(myTextSprite_2, 500, fancyText.AnimationPlayMode.UntilDone)
+            controller.moveSprite(mySprite, 100, 0)
+            timer.after(500, function () {
+                controller.moveSprite(mySprite, 100, 0)
+                sprites.destroy(myTextSprite_2)
+                boss1_fight_start = 1
+            })
+        })
+    })
+})
 statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
     boss1_fight_start = 0
     attack = 0
@@ -614,8 +809,8 @@ statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.entrance)
     animation.runImageAnimation(
-    entranceLv2,
-    [img`
+        entranceLv2,
+        [img`
         . . . . . . . . . 2 2 2 2 . . . 
         . . . . . . . 2 2 1 1 1 1 2 . . 
         . . . . 2 2 3 3 1 1 1 1 1 1 . . 
@@ -632,7 +827,7 @@ statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . 3 1 3 . . . 
@@ -649,7 +844,7 @@ statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
         . . . . . . . . . 2 1 1 1 1 2 . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -666,7 +861,7 @@ statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
         . . 1 1 1 1 1 1 3 3 2 2 . . . . 
         . . 2 1 1 1 1 2 2 . . . . . . . 
         . . . 2 2 2 2 . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . 2 1 1 1 1 2 . . . . . . . . . 
@@ -684,15 +879,15 @@ statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `],
-    100,
-    true
+        100,
+        true
     )
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     face = 1
     animation.runImageAnimation(
-    mySprite,
-    [img`
+        mySprite,
+        [img`
         . . . . . . . . 
         . 2 . . 7 7 . . 
         . . 7 7 7 7 . . 
@@ -701,7 +896,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         . . b 1 b 1 . . 
         . . 7 7 7 7 . . 
         . . e . . e . . 
-        `,img`
+        `, img`
         . . . . . . . . 
         . 2 7 7 7 7 . . 
         . 7 7 7 7 7 . . 
@@ -710,7 +905,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . e . . e . . 
         . . . . . e . . 
-        `,img`
+        `, img`
         . 2 . . 7 7 . . 
         . . 7 7 7 7 . . 
         . 7 7 7 7 7 7 . 
@@ -719,7 +914,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . . e e . . . 
         . . . . e . . . 
-        `,img`
+        `, img`
         . 2 . . 7 7 . . 
         . . 7 7 7 7 . . 
         . 7 7 7 7 7 7 . 
@@ -728,7 +923,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . . e e . . . 
         . . . e . . . . 
-        `,img`
+        `, img`
         . 2 . . 7 7 . . 
         . . 7 7 7 7 . . 
         . 7 7 7 7 7 7 . 
@@ -737,7 +932,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . e . . e . . 
         . . e . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . 
         . . 2 . 7 7 . . 
         . . 7 7 7 7 7 . 
@@ -747,9 +942,109 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         . . 7 7 7 7 . . 
         . . e . . e . . 
         `],
-    50,
-    true
+        50,
+        true
     )
+})
+sprites.onOverlap(SpriteKind.round, SpriteKind.ninja, function (sprite, otherSprite) {
+    otherSprite.setImage(img`
+        . . 3 . . . . . . 
+        . . . 3 3 3 3 3 . 
+        . . 3 . f 5 5 5 . 
+        . . . . f f 5 f . 
+        . . . . . . f . . 
+        . . . . . f 5 f . 
+        . . . . . . f . . 
+        . . . . . f . f . 
+        . . . . . 5 . 5 . 
+        `)
+    timer.after(500, function () {
+        animation.runImageAnimation(
+            otherSprite,
+            [img`
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . 3 . f 5 5 5 . 
+            . . . . f f 5 f . 
+            . . . . . . f . . 
+            . . . . . f 5 f . 
+            . . . . . . f . . 
+            . . . . . f . f . 
+            . . . . . 5 . 5 . 
+            `, img`
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . f f 5 f . 
+            . . . . . . f . . 
+            . . . . . f 5 f . 
+            . . . . . . f . . 
+            . . . . . f . f . 
+            . . . . . 5 . 5 . 
+            `, img`
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . f . . 
+            . . . . . f 5 f . 
+            . . . . . . f . . 
+            . . . . . f . f . 
+            . . . . . 5 . 5 . 
+            `, img`
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . f . . 
+            . . . . . f . f . 
+            . . . . . 5 . 5 . 
+            `, img`
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . 5 . 5 . 
+            `, img`
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . c . . . . 
+            . . . c . . . . . 
+            . . . . . c c . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            . . . . . . . . . 
+            `],
+            100,
+            false
+        )
+        timer.after(1000, function () {
+            otherSprite.setImage(img`
+                . . 3 . . . . . . 
+                . . . 3 3 3 3 3 . 
+                . . 3 . f 5 5 5 . 
+                . . . . f f 5 f . 
+                . . . . . . f . . 
+                . . . . . f 5 f . 
+                . . . . . . f . . 
+                . . . . . f . f . 
+                . . . . . 5 . 5 . 
+                `)
+            spriteutils.placeAngleFrom(
+                otherSprite,
+                0,
+                10,
+                mySprite
+            )
+        })
+    })
 })
 info.onLifeZero(function () {
     boss1_fight_start = 0
@@ -781,8 +1076,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         . . f f f f . . 
         `, SpriteKind.Food)
     animation.runImageAnimation(
-    coin,
-    [img`
+        coin,
+        [img`
         . . b b b b . . 
         . b 5 5 5 5 b . 
         b 5 d 3 3 d 5 b 
@@ -791,7 +1086,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         c d d 1 1 d d c 
         . f d d d d f . 
         . . f f f f . . 
-        `,img`
+        `, img`
         . . b b b . . . 
         . b 5 5 5 b . . 
         b 5 d 3 d 5 b . 
@@ -800,7 +1095,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         c 5 d 1 d d c . 
         . f d d d f . . 
         . . f f f . . . 
-        `,img`
+        `, img`
         . . . b b . . . 
         . . b 5 5 b . . 
         . b 5 d 1 5 b . 
@@ -809,7 +1104,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         . c 5 1 d d c . 
         . . f d d f . . 
         . . . f f . . . 
-        `,img`
+        `, img`
         . . . b b . . . 
         . . b 5 5 b . . 
         . . b 1 1 b . . 
@@ -818,7 +1113,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         . . c d d c . . 
         . . c 3 3 c . . 
         . . . f f . . . 
-        `,img`
+        `, img`
         . . . b b . . . 
         . . b 5 5 b . . 
         . b 5 1 d 5 b . 
@@ -827,7 +1122,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         . c d d 1 5 c . 
         . . f d d f . . 
         . . . f f . . . 
-        `,img`
+        `, img`
         . . . b b b . . 
         . . b 5 5 5 b . 
         . b 5 d 3 d 5 b 
@@ -837,8 +1132,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
         . . f d d d f . 
         . . . f f f . . 
         `],
-    100,
-    true
+        100,
+        true
     )
     coin.setPosition(otherSprite.x, otherSprite.y)
     sprites.destroy(otherSprite, effects.fire, 500)
@@ -857,20 +1152,24 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
 })
 let crowArrow2: Sprite = null
 let crowArrow: Sprite = null
+let necroHealth: StatusBarSprite = null
+let myTextSprite_2: fancyText.TextSprite = null
+let necroNightmare: Sprite = null
 let projectile: Sprite = null
 let face = 0
 let myTextSprite: fancyText.TextSprite = null
 let crowReaper: Sprite = null
-let blacksmith: Sprite = null
-let zombieHealther: Sprite = null
 let entranceLv2: Sprite = null
 let statusbar: StatusBarSprite = null
+let ninja: Sprite = null
+let blacksmith: Sprite = null
+let zombieHealther: Sprite = null
 let coin: Sprite = null
 let blob: Sprite = null
 let mySprite: Sprite = null
 let attack = 0
 let boss1_fight_start = 0
-tiles.loadMap(tiles.createSmallMap(tilemap`level6`))
+tiles.loadMap(tiles.createMap(tilemap`level6`))
 boss1_fight_start = 0
 attack = 1
 scene.setBackgroundImage(img`
@@ -1017,6 +1316,34 @@ mySprite = sprites.create(img`
     . . 7 7 7 7 . . 
     . . e . . e . . 
     `, SpriteKind.Player)
+let round = sprites.create(img`
+    .........................
+    ........333333333........
+    ......3333333333333......
+    .....333333333333333.....
+    ....33333333333333333....
+    ...3333333333333333333...
+    ..333333333333333333333..
+    ..333333333333333333333..
+    .33333333333333333333333.
+    .33333333333333333333333.
+    .33333333333333333333333.
+    .33333333333333333333333.
+    .33333333333333333333333.
+    .33333333333333333333333.
+    .33333333333333333333333.
+    .33333333333333333333333.
+    .33333333333333333333333.
+    ..333333333333333333333..
+    ..333333333333333333333..
+    ...3333333333333333333...
+    ....33333333333333333....
+    .....333333333333333.....
+    ......3333333333333......
+    ........333333333........
+    .........................
+    `, SpriteKind.round)
+round.setFlag(SpriteFlag.Invisible, true)
 scene.cameraFollowSprite(mySprite)
 controller.moveSprite(mySprite, 100, 0)
 mySprite.ay = 500
@@ -1039,6 +1366,14 @@ for (let value of tiles.getTilesByType(assets.tile`myTile3`)) {
     blob.setBounceOnWall(true)
     blob.vy = 30
 }
+game.onUpdate(function () {
+    spriteutils.placeAngleFrom(
+        round,
+        0,
+        0,
+        mySprite
+    )
+})
 game.onUpdateInterval(2000, function () {
     if (boss1_fight_start == 1) {
         if (crowReaper.isHittingTile(CollisionDirection.Bottom)) {

@@ -1,5 +1,5 @@
 {
-    "name": "Necro Nightmare",
+    "name": "Necro Nightmare - Copy",
     "description": "",
     "dependencies": {
         "device": "*",
@@ -12,7 +12,8 @@
         "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.2.1",
         "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
         "arcade-fancy-text": "github:riknoll/arcade-fancy-text#v0.1.1",
-        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.2"
+        "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.2",
+        "carnival": "github:microsoft/arcade-carnival#v0.0.7"
     },
     "files": [
         "main.blocks",
@@ -32,7 +33,7 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "palette": [
         "#000000",
         "#FFFFFF",
@@ -47,7 +48,7 @@
         "#370B51",
         "#453042",
         "#3B2249",
-        "#623727",
+        "#382924",
         "#4E0E0E",
         "#000000"
     ]
